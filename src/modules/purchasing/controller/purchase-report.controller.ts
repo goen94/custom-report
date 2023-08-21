@@ -2,7 +2,7 @@ import { format } from "date-fns";
 import { NextFunction, Request, Response } from "express";
 import { ObjectId } from "mongodb";
 import { PurchaseReportInterface } from "../model/purchase.entity";
-import { PurchaseReportService } from "../services/purchase-report.service";
+import { PurchaseReportService } from "../services/purchase-report.service.js";
 import { QueryInterface } from "@src/database/connection.js";
 import { db } from "@src/database/database.js";
 
@@ -40,39 +40,21 @@ export const purchaseReportController = async (req: Request, res: Response, next
       dateTo = req.query.dateTo as string;
     }
 
-    let costumeFilter = {};
-    costumeFilter = {
-      date: {
-        $gte: dateFrom,
-        $lte: dateTo,
-      },
-    };
+    const match = [];
+    match.push({ date: { $gte: dateFrom, $lte: dateTo } });
 
     if (req.query.supplier_id) {
-      costumeFilter = { ...costumeFilter, "supplier._id": new ObjectId(req.query.supplier_id as string) };
+      match.push({ "supplier._id": new ObjectId(req.query.supplier_id as string) });
     }
     if (req.query.warehouse_id) {
-      costumeFilter = { ...costumeFilter, "warehouse._id": new ObjectId(req.query.warehouse_id as string) };
+      match.push({ "warehouse._id": new ObjectId(req.query.warehouse_id as string) });
     }
     if (req.query.item_id) {
-      costumeFilter = {
-        ...costumeFilter,
-        items: {
-          $all: [
-            {
-              $elemMatch: {
-                _id: new ObjectId(req.query.item_id as string),
-              },
-            },
-          ],
-        },
-      };
+      match.push({ "items._id": new ObjectId(req.query.item_id as string) });
     }
 
-    query.filter = { ...query.filter, ...costumeFilter };
-
     const service = new PurchaseReportService(db);
-    const result = await service.handle(query);
+    const result = await service.handle(query, match);
 
     const pagination: PaginationInterface = {
       page: result.pagination.page,

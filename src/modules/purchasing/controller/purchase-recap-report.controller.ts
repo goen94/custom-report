@@ -2,7 +2,7 @@ import { format } from "date-fns";
 import { NextFunction, Request, Response } from "express";
 import { ObjectId } from "mongodb";
 import { PurchaseRecapReportInterface } from "../model/purchase.entity";
-import { PurchaseRecapReportService } from "../services/purchase-recap-report.service";
+import { PurchaseRecapReportService } from "../services/purchase-recap-report.service.js";
 import { QueryInterface } from "@src/database/connection.js";
 import { db } from "@src/database/database.js";
 
@@ -39,22 +39,15 @@ export const purchaseRecapReportController = async (req: Request, res: Response,
       dateTo = req.query.dateTo as string;
     }
 
-    let costumeFilter = {};
-    costumeFilter = {
-      date: {
-        $gte: dateFrom,
-        $lte: dateTo,
-      },
-    };
+    const match = [];
+    match.push({ date: { $gte: dateFrom, $lte: dateTo } });
 
     if (req.query.supplier_id) {
-      costumeFilter = { ...costumeFilter, "supplier._id": new ObjectId(req.query.supplier_id as string) };
+      match.push({ "supplier._id": new ObjectId(req.query.supplier_id as string) });
     }
 
-    query.filter = { ...query.filter, ...costumeFilter };
-
     const service = new PurchaseRecapReportService(db);
-    const result = await service.handle(query);
+    const result = await service.handle(query, match);
     const pagination: PaginationInterface = {
       page: result.pagination.page,
       pageSize: result.pagination.pageSize,

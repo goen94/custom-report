@@ -1,8 +1,8 @@
-import { ExampleEntityInterface } from "../example.entity.js";
+import { PurchaseInterface } from "../purchase.entity";
 import DatabaseConnection, { RetrieveOptionsInterface } from "@src/database/connection.js";
 import DatabaseManager from "@src/database/database-manager.js";
 
-interface ResponseInterface extends ExampleEntityInterface {
+interface ResponseInterface extends PurchaseInterface {
   _id: string;
 }
 
@@ -14,10 +14,9 @@ export class RetrieveExampleRepository {
   }
 
   public async handle(id: string, options?: RetrieveOptionsInterface): Promise<ResponseInterface> {
-    const response: ExampleEntityInterface = await this.databaseManager.retrieve(id, options);
+    const response: ResponseInterface = await this.databaseManager.retrieve(id, options);
 
     return {
-      _id: response._id as string,
       ...response,
     };
   }

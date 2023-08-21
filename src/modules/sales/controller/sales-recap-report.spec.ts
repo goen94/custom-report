@@ -1,7 +1,7 @@
 import request from "supertest";
 import { createApp } from "@src/app.js";
 import { SalesFactory } from "@src/test/sales-factory.js";
-import { resetDatabase, retrieveAll } from "@src/test/utils.js";
+import { resetDatabase } from "@src/test/utils.js";
 
 describe("retrieve sales recap report", () => {
   beforeEach(async () => {
@@ -28,9 +28,9 @@ describe("retrieve sales recap report", () => {
     expect(response.body.data[0]._id).toBeDefined();
     expect(response.body.data[0].invoiceNumber).toStrictEqual(data[0].invoiceNumber);
     expect(response.body.data[0].date).toStrictEqual(data[0].date);
-    expect(response.body.data[0].warehouse.name).toStrictEqual(data[0].warehouse.name);
-    expect(response.body.data[0].customer.name).toStrictEqual(data[0].customer.name);
-    expect(response.body.data[0].deliveryNote.number).toStrictEqual(data[0].deliveryNote.number);
+    expect(response.body.data[0].warehouse.name).toStrictEqual(data[0].warehouse?.name);
+    expect(response.body.data[0].customer.name).toStrictEqual(data[0].customer?.name);
+    expect(response.body.data[0].deliveryNote.number).toStrictEqual(data[0].deliveryNote?.number);
     expect(response.body.data[0].notes).toStrictEqual(data[0].notes);
     expect(response.body.data[0].taxBase).toStrictEqual(data[0].taxBase);
     expect(response.body.data[0].tax).toStrictEqual(data[0].tax);

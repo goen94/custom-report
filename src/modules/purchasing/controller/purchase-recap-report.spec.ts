@@ -1,7 +1,7 @@
 import request from "supertest";
-import { PurchaseFactory } from "../../../test/purchase-factory";
 import { createApp } from "@src/app.js";
-import { resetDatabase, retrieveAll } from "@src/test/utils.js";
+import { PurchaseFactory } from "@src/test/purchase-factory.js";
+import { resetDatabase } from "@src/test/utils.js";
 
 describe("retrieve purchase recap report", () => {
   beforeEach(async () => {
@@ -15,7 +15,10 @@ describe("retrieve purchase recap report", () => {
 
     const data = await purchaseFactory.retrievePurchaseRecapReport();
 
-    const response = await request(app).get(`/v1/purchase-recap-report`).query({ dateFrom: "2023-01-01" });
+    const response = await request(app).get(`/v1/purchase-recap-report`).query({
+      dateFrom: "2023-01-01",
+      dateTo: "2023-01-08",
+    });
 
     // expect http response
     expect(response.statusCode).toEqual(200);

@@ -1,7 +1,7 @@
 import { format } from "date-fns";
 import { NextFunction, Request, Response } from "express";
 import { SalesRecapReportInterface } from "../model/sales.entity";
-import { SalesRecapReportService } from "../service/sales-recap-report.service";
+import { SalesRecapReportService } from "../service/sales-recap-report.service.js";
 import { QueryInterface } from "@src/database/connection.js";
 import { db } from "@src/database/database.js";
 
@@ -39,18 +39,11 @@ export const salesRecapReportController = async (req: Request, res: Response, ne
       dateTo = req.query.dateTo as string;
     }
 
-    let costumeFilter = {};
-    costumeFilter = {
-      date: {
-        $gte: dateFrom,
-        $lte: dateTo,
-      },
-    };
-
-    query.filter = { ...query.filter, ...costumeFilter };
+    const match = [];
+    match.push({ date: { $gte: dateFrom, $lte: dateTo } });
 
     const service = new SalesRecapReportService(db);
-    const result = await service.handle(query);
+    const result = await service.handle(query, match);
     const pagination: PaginationInterface = {
       page: result.pagination.page,
       pageSize: result.pagination.pageSize,

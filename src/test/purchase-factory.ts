@@ -16,12 +16,12 @@ const iQuery: QueryInterface = {
 export class PurchaseFactory {
   public async retrievePurchaseRecapReport(): Promise<PurchaseRecapReportInterface[]> {
     const purchaseRecapReportService = new PurchaseRecapReportService(db);
-    return (await purchaseRecapReportService.handle(iQuery)).data;
+    return (await purchaseRecapReportService.handle(iQuery, [])).data;
   }
 
   public async retrievePurchaseReport(): Promise<PurchaseReportInterface[]> {
     const purchaseReportService = new PurchaseReportService(db);
-    return (await purchaseReportService.handle(iQuery)).data as unknown as Array<PurchaseReportInterface>;
+    return (await purchaseReportService.handle(iQuery, [])).data as unknown as Array<PurchaseReportInterface>;
   }
 
   public async createMany() {
@@ -38,9 +38,9 @@ export class PurchaseFactory {
           _id: "64e1cbb65cf72f7fbf63cc77",
           number: "ORDER020123001",
         },
-        taxBase: "230000",
-        tax: "25300",
-        total: "255300",
+        taxBase: "530000",
+        tax: "58300",
+        total: "588300",
         notes: "this is note",
         approvalStatus: "approved",
         formStatus: "done",
@@ -68,6 +68,16 @@ export class PurchaseFactory {
             price: 50000.0,
             discount: 20000.0,
             subtotal: 230000.0,
+          },
+          {
+            _id: "64e1cce47d35acc590d66f9d",
+            code: "ITEM003",
+            name: "Product C",
+            quantity: 15,
+            unit: "pcs",
+            price: 20000.0,
+            discount: 0.0,
+            subtotal: 300000.0,
           },
         ],
       },
@@ -125,6 +135,50 @@ export class PurchaseFactory {
         purchaseOrder: {
           _id: "64e1cc9f8fbb90046ce53e93",
           number: "ORDER030123001",
+        },
+        taxBase: "200000",
+        tax: "22000",
+        total: "222000",
+        notes: "this is note",
+        approvalStatus: "approved",
+        formStatus: "done",
+        warehouse: {
+          _id: "64e1cbb65cf72f7fbf63cc75",
+          code: "W01",
+          name: "Warehouse 01",
+        },
+        supplier: {
+          _id: "64e1cc9f8fbb90046ce53e94",
+          code: "S01",
+          name: "Supplier 01",
+        },
+        createdBy: {
+          _id: "64e1cc9f8fbb90046ce53e95",
+          name: "User",
+        },
+        items: [
+          {
+            _id: "64e1cce47d35acc590d66f9c",
+            code: "ITEM002",
+            name: "Product B",
+            quantity: 5,
+            unit: "kg",
+            price: 40000.0,
+            discount: 0.0,
+            subtotal: 200000.0,
+          },
+        ],
+      },
+      {
+        date: "2023-01-30",
+        purchaseInvoiceNumber: "PI300123001",
+        purchaseReceive: {
+          _id: "64e36b4e9dfa2517f580acc9",
+          number: "RECEIVE300123001",
+        },
+        purchaseOrder: {
+          _id: "64e36b4e9dfa2517f580acca",
+          number: "ORDER300123001",
         },
         taxBase: "200000",
         tax: "22000",

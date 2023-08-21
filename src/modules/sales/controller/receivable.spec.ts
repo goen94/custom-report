@@ -1,5 +1,7 @@
-import { createApp } from "@src/app";
-import { resetDatabase } from "@src/test/utils";
+import request from "supertest";
+import { createApp } from "@src/app.js";
+import { SalesFactory } from "@src/test/sales-factory.js";
+import { resetDatabase } from "@src/test/utils.js";
 
 describe("retrieve receivables report", () => {
   beforeEach(async () => {
@@ -9,9 +11,9 @@ describe("retrieve receivables report", () => {
     const app = await createApp();
 
     const salesFactory = new SalesFactory();
-    await salesFactory.createMany(3);
+    await salesFactory.createMany();
 
-    const data = await retrieveAll("sales");
+    const data = await salesFactory.retrieveReceivableReport();
 
     const response = await request(app).get(`/v1/receivables`);
 
@@ -19,7 +21,7 @@ describe("retrieve receivables report", () => {
     expect(response.statusCode).toEqual(200);
 
     // expect response json
-    expect(response.body.data.length).toStrictEqual(3);
+    expect(response.body.data.length).toStrictEqual(9);
     expect(response.body.data[0]._id).toBeDefined();
     expect(response.body.data[0].salesOrder.number).toStrictEqual(data[0].salesOrder.number);
     expect(response.body.data[0].invoiceNumber).toStrictEqual(data[0].invoiceNumber);
@@ -44,17 +46,17 @@ describe("retrieve receivables report", () => {
     expect(response.body.pagination.page).toStrictEqual(1);
     expect(response.body.pagination.pageSize).toStrictEqual(10);
     expect(response.body.pagination.pageCount).toStrictEqual(1);
-    expect(response.body.pagination.totalDocument).toStrictEqual(3);
+    expect(response.body.pagination.totalDocument).toStrictEqual(9);
   });
   it("should be able to filter report by customer", async () => {
     const app = await createApp();
 
     const salesFactory = new SalesFactory();
-    await salesFactory.createMany(3);
+    await salesFactory.createMany();
 
-    const data = await retrieveAll("sales");
+    const data = await salesFactory.retrieveReceivableReport();
 
-    const response = await request(app).get(`/v1/receivables`, {
+    const response = await request(app).get(`/v1/receivables`).query({
       customer_id: data[0].customer._id,
     });
 
@@ -62,7 +64,7 @@ describe("retrieve receivables report", () => {
     expect(response.statusCode).toEqual(200);
 
     // expect response json
-    expect(response.body.data.length).toStrictEqual(3);
+    expect(response.body.data.length).toStrictEqual(7);
     expect(response.body.data[0]._id).toBeDefined();
     expect(response.body.data[0].salesOrder.number).toStrictEqual(data[0].salesOrder.number);
     expect(response.body.data[0].invoiceNumber).toStrictEqual(data[0].invoiceNumber);
@@ -87,6 +89,6 @@ describe("retrieve receivables report", () => {
     expect(response.body.pagination.page).toStrictEqual(1);
     expect(response.body.pagination.pageSize).toStrictEqual(10);
     expect(response.body.pagination.pageCount).toStrictEqual(1);
-    expect(response.body.pagination.totalDocument).toStrictEqual(3);
+    expect(response.body.pagination.totalDocument).toStrictEqual(7);
   });
 });
