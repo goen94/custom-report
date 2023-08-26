@@ -1,7 +1,11 @@
+import { faker } from "@faker-js/faker";
+import { format } from "date-fns";
+import Factory from "./factory.js";
 import { DocumentInterface, QueryInterface } from "@src/database/connection";
 import { db } from "@src/database/database.js";
 import { CreateManyExampleRepository } from "@src/modules/sales/model/repository/create-many.repository.js";
-import { SalesReportInterface } from "@src/modules/sales/model/sales.entity";
+import { CreateExampleRepository } from "@src/modules/sales/model/repository/create.repository.js";
+import { SalesInterface } from "@src/modules/sales/model/sales.entity.js";
 import { ReceivableReportService } from "@src/modules/sales/service/receivable.service.js";
 import { SalesRecapReportService } from "@src/modules/sales/service/sales-recap-report.service.js";
 import { SalesReportService } from "@src/modules/sales/service/sales-report.service.js";
@@ -14,7 +18,71 @@ const iQuery: QueryInterface = {
   sort: "",
 };
 
-export class SalesFactory {
+export class SalesFactory extends Factory<SalesInterface> {
+  definition() {
+    const fakePrice = faker.datatype.number({ min: 10000, max: 80000, precision: 1000 });
+    const fakeQty = faker.datatype.number({ min: 5, max: 10 });
+    const fakeDisc = faker.datatype.number({ min: 0, max: 30000, precision: 1000 });
+    const fakeSubTotal = fakePrice * fakeQty - fakeDisc;
+    const fakeTax = fakeSubTotal * (11 / 100);
+    const fakeTotal = fakeSubTotal + fakeTax;
+
+    return {
+      date: format(faker.date.between("2023-01-02", "2023-01-03"), "yyyy-MM-dd"),
+      salesInvoiceNumber: faker.finance.account(),
+      deliveryNote: {
+        _id: faker.database.mongodbObjectId(),
+        number: faker.finance.account(),
+      },
+      salesOrder: {
+        _id: faker.database.mongodbObjectId(),
+        number: faker.finance.account(),
+      },
+      taxBase: fakeSubTotal.toString(),
+      tax: fakeTax.toString(),
+      total: fakeTotal.toString(),
+      notes: faker.lorem.sentence(5),
+      approvalStatus: faker.helpers.arrayElement(["pending", "approved", "rejected"]),
+      formStatus: faker.helpers.arrayElement(["pending", "done"]),
+      payment: {
+        _id: faker.database.mongodbObjectId(),
+        paid: faker.datatype.number({ min: 10000, max: 80000, precision: 1000 }),
+        number: faker.finance.account(),
+      },
+      memoJournal: {
+        _id: faker.database.mongodbObjectId(),
+        debit: faker.datatype.number({ min: 10000, max: 80000, precision: 1000 }),
+        number: faker.finance.account(),
+      },
+      warehouse: {
+        _id: faker.database.mongodbObjectId(),
+        code: faker.random.alpha({ count: 2, casing: "upper" }),
+        name: faker.commerce.department(),
+      },
+      customer: {
+        _id: faker.database.mongodbObjectId(),
+        code: faker.random.alpha({ count: 2, casing: "upper" }),
+        name: faker.name.fullName(),
+      },
+      createdBy: {
+        _id: faker.database.mongodbObjectId(),
+        name: faker.internet.userName(),
+      },
+      items: [
+        {
+          _id: faker.database.mongodbObjectId(),
+          code: faker.commerce.product(),
+          name: faker.commerce.productName(),
+          quantity: fakeQty,
+          unit: faker.helpers.arrayElement(["pcs", "kg", "gr"]),
+          price: fakePrice,
+          discount: fakeDisc,
+          subtotal: fakeSubTotal,
+        },
+      ],
+    };
+  }
+
   public async retrieveReceivableReport() {
     const receivableReportService = new ReceivableReportService(db);
     return (await receivableReportService.handle(iQuery, [])).data as any;
@@ -30,235 +98,11 @@ export class SalesFactory {
     return (await salesReportService.handle(iQuery, [])).data as unknown as Array<DocumentInterface>;
   }
 
-  public async createMany() {
-    const createMany = new CreateManyExampleRepository(db);
-    return await createMany.handle([
-      {
-        date: "2023-01-02",
-        salesInvoiceNumber: "SI020123001",
-        deliveryNote: {
-          _id: "64e1cbb65cf72f7fbf63cc76",
-          number: "DN020123001",
-        },
-        salesOrder: {
-          _id: "64e1d52fc7ce85d93a593af0",
-          number: "SO020123001",
-        },
-        taxBase: "530000",
-        tax: "58300",
-        total: "588300",
-        notes: "this is note",
-        approvalStatus: "approved",
-        formStatus: "done",
-        payment: {
-          _id: "64e1d52fc7ce85d93a593af1",
-          paid: 120000.0,
-          number: "PAY020123001",
-        },
-        memoJournal: {
-          _id: "64e1d52fc7ce85d93a593af2",
-          debit: 80000.0,
-          number: "MEMO020123001",
-        },
-        warehouse: {
-          _id: "64e1d8e2ce2050d89aad14c9",
-          code: "W01",
-          name: "Warehouse 01",
-        },
-        customer: {
-          _id: "64e1d91ecc6c49a93728b06d",
-          code: "C01",
-          name: "Customer 01",
-        },
-        createdBy: {
-          _id: "64e1d91ecc6c49a93728b06e",
-          name: "User",
-        },
-        items: [
-          {
-            _id: "64e1d8e2ce2050d89aad14c8",
-            code: "ITEM001",
-            name: "Product A",
-            quantity: 5,
-            unit: "pcs",
-            price: 50000.0,
-            discount: 20000.0,
-            subtotal: 230000.0,
-          },
-          {
-            _id: "64e1d8e2ce2050d89aad14c7",
-            code: "ITEM003",
-            name: "Product C",
-            quantity: 15,
-            unit: "pcs",
-            price: 20000.0,
-            discount: 0.0,
-            subtotal: 300000.0,
-          },
-        ],
-      },
-      {
-        date: "2023-01-02",
-        salesInvoiceNumber: "SI020123002",
-        deliveryNote: {
-          _id: "64e1d5a8651ecc109721d0ef",
-          number: "DN020123002",
-        },
-        salesOrder: {
-          _id: "64e1d5a8651ecc109721d0f0",
-          number: "SO020123002",
-        },
-        taxBase: "300000",
-        tax: "33000",
-        total: "333000",
-        notes: "this is note",
-        approvalStatus: "approved",
-        formStatus: "done",
-        payment: {
-          _id: "64e1d5a8651ecc109721d0f1",
-          paid: 90000.0,
-          number: "PAY020123002",
-        },
-        memoJournal: {
-          _id: "64e1d5dbec5297d57a7e1feb",
-          debit: 50000.0,
-          number: "MEMO020123002",
-        },
-        warehouse: {
-          _id: "64e1d8e2ce2050d89aad14c9",
-          code: "W01",
-          name: "Warehouse 01",
-        },
-        customer: {
-          _id: "64e364aafb23c8b466a55bc4",
-          code: "C02",
-          name: "Customer 02",
-        },
-        createdBy: {
-          _id: "64e1d91ecc6c49a93728b06e",
-          name: "User",
-        },
-        items: [
-          {
-            _id: "64e1d8e2ce2050d89aad14c7",
-            code: "ITEM003",
-            name: "Product C",
-            quantity: 15,
-            unit: "pcs",
-            price: 20000.0,
-            discount: 0.0,
-            subtotal: 300000.0,
-          },
-        ],
-      },
-      {
-        date: "2023-01-03",
-        salesInvoiceNumber: "SI030123001",
-        deliveryNote: {
-          _id: "64e1d5dbec5297d57a7e1fec",
-          number: "DN030123001",
-        },
-        salesOrder: {
-          _id: "64e1d5dbec5297d57a7e1fed",
-          number: "SO030123001",
-        },
-        taxBase: "200000",
-        tax: "22000",
-        total: "222000",
-        notes: "this is note",
-        approvalStatus: "approved",
-        formStatus: "done",
-        payment: {
-          _id: "64e1d60b718d872b114ad2ef",
-          paid: 20000.0,
-          number: "PAY030123001",
-        },
-        memoJournal: {
-          _id: "64e1d60b718d872b114ad2f0",
-          debit: 30000.0,
-          number: "MEMO030123001",
-        },
-        warehouse: {
-          _id: "64e1d8e2ce2050d89aad14c9",
-          code: "W01",
-          name: "Warehouse 01",
-        },
-        customer: {
-          _id: "64e1d91ecc6c49a93728b06d",
-          code: "C01",
-          name: "Customer 01",
-        },
-        createdBy: {
-          _id: "64e1d91ecc6c49a93728b06e",
-          name: "User",
-        },
-        items: [
-          {
-            _id: "64e1d60b718d872b114ad2f1",
-            code: "ITEM002",
-            name: "Product B",
-            quantity: 5,
-            unit: "kg",
-            price: 40000.0,
-            discount: 0.0,
-            subtotal: 200000.0,
-          },
-        ],
-      },
-      {
-        date: "2023-01-30",
-        salesInvoiceNumber: "SI300123001",
-        deliveryNote: {
-          _id: "64e368bb01a74400d206283f",
-          number: "DN300123001",
-        },
-        salesOrder: {
-          _id: "64e368bb01a74400d2062840",
-          number: "SO300123001",
-        },
-        taxBase: "200000",
-        tax: "22000",
-        total: "222000",
-        notes: "this is note",
-        approvalStatus: "approved",
-        formStatus: "done",
-        payment: {
-          _id: "64e368bb01a74400d2062841",
-          paid: 20000.0,
-          number: "PAY030123001",
-        },
-        memoJournal: {
-          _id: "64e36b4e9dfa2517f580acc9",
-          debit: 30000.0,
-          number: "MEMO030123001",
-        },
-        warehouse: {
-          _id: "64e1d8e2ce2050d89aad14c9",
-          code: "W01",
-          name: "Warehouse 01",
-        },
-        customer: {
-          _id: "64e1d91ecc6c49a93728b06d",
-          code: "C01",
-          name: "Customer 01",
-        },
-        createdBy: {
-          _id: "64e1d91ecc6c49a93728b06e",
-          name: "User",
-        },
-        items: [
-          {
-            _id: "64e1d60b718d872b114ad2f1",
-            code: "ITEM002",
-            name: "Product B",
-            quantity: 5,
-            unit: "kg",
-            price: 40000.0,
-            discount: 0.0,
-            subtotal: 200000.0,
-          },
-        ],
-      },
-    ]);
+  public async create() {
+    return await new CreateExampleRepository(db).handle(this.makeOne());
+  }
+
+  public async createMany(count: number) {
+    return new CreateManyExampleRepository(db).handle(this.makeMany(count));
   }
 }

@@ -11,7 +11,7 @@ describe("retrieve receivables report", () => {
     const app = await createApp();
 
     const salesFactory = new SalesFactory();
-    await salesFactory.createMany();
+    await salesFactory.createMany(3);
 
     const data = await salesFactory.retrieveReceivableReport();
 
@@ -21,7 +21,7 @@ describe("retrieve receivables report", () => {
     expect(response.statusCode).toEqual(200);
 
     // expect response json
-    expect(response.body.data.length).toStrictEqual(9);
+    expect(response.body.data.length).toStrictEqual(6);
     expect(response.body.data[0]._id).toBeDefined();
     expect(response.body.data[0].salesOrder.number).toStrictEqual(data[0].salesOrder.number);
     expect(response.body.data[0].invoiceNumber).toStrictEqual(data[0].invoiceNumber);
@@ -46,13 +46,13 @@ describe("retrieve receivables report", () => {
     expect(response.body.pagination.page).toStrictEqual(1);
     expect(response.body.pagination.pageSize).toStrictEqual(10);
     expect(response.body.pagination.pageCount).toStrictEqual(1);
-    expect(response.body.pagination.totalDocument).toStrictEqual(9);
+    expect(response.body.pagination.totalDocument).toStrictEqual(6);
   });
   it("should be able to filter report by customer", async () => {
     const app = await createApp();
 
     const salesFactory = new SalesFactory();
-    await salesFactory.createMany();
+    await salesFactory.createMany(3);
 
     const data = await salesFactory.retrieveReceivableReport();
 
@@ -64,7 +64,7 @@ describe("retrieve receivables report", () => {
     expect(response.statusCode).toEqual(200);
 
     // expect response json
-    expect(response.body.data.length).toStrictEqual(7);
+    expect(response.body.data.length).toStrictEqual(2);
     expect(response.body.data[0]._id).toBeDefined();
     expect(response.body.data[0].salesOrder.number).toStrictEqual(data[0].salesOrder.number);
     expect(response.body.data[0].invoiceNumber).toStrictEqual(data[0].invoiceNumber);
@@ -89,6 +89,6 @@ describe("retrieve receivables report", () => {
     expect(response.body.pagination.page).toStrictEqual(1);
     expect(response.body.pagination.pageSize).toStrictEqual(10);
     expect(response.body.pagination.pageCount).toStrictEqual(1);
-    expect(response.body.pagination.totalDocument).toStrictEqual(7);
+    expect(response.body.pagination.totalDocument).toStrictEqual(2);
   });
 });

@@ -11,7 +11,7 @@ describe("retrieve sales recap report", () => {
     const app = await createApp();
 
     const salesFactory = new SalesFactory();
-    await salesFactory.createMany();
+    await salesFactory.createMany(3);
 
     const data = await salesFactory.retrieveSalesRecapReport();
 

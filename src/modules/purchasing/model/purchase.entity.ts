@@ -2,7 +2,7 @@ import { ObjectId } from "mongodb";
 
 export interface PurchaseInterface {
   _id?: string | ObjectId;
-  date?: Date;
+  date?: string;
   purchaseInvoiceNumber?: string;
   purchaseReceive?: {
     _id: string | ObjectId;
@@ -16,8 +16,8 @@ export interface PurchaseInterface {
   tax?: string;
   total?: string;
   notes?: string;
-  approvalStatus?: "pending" | "approved" | "rejected";
-  formStatus?: "pending" | "done";
+  approvalStatus?: string;
+  formStatus?: string;
   warehouse?: {
     _id: string | ObjectId;
     code: string;
@@ -49,7 +49,7 @@ interface ItemInterface {
 export interface PurchaseRecapReportInterface {
   _id: string | ObjectId;
   invoiceNumber?: string;
-  date?: Date;
+  date?: string;
   supplier?: {
     name?: string;
   };

@@ -2,7 +2,7 @@ import { ObjectId } from "mongodb";
 
 export interface SalesInterface {
   _id?: string | ObjectId;
-  date?: Date;
+  date?: string;
   salesInvoiceNumber?: string;
   deliveryNote?: {
     _id: string | ObjectId;
@@ -16,8 +16,8 @@ export interface SalesInterface {
   tax?: string;
   total?: string;
   notes?: string;
-  approvalStatus?: "pending" | "approved" | "rejected";
-  formStatus?: "pending" | "done";
+  approvalStatus?: string;
+  formStatus?: string;
   payment?: {
     _id: string | ObjectId;
     paid: number;
@@ -59,7 +59,7 @@ interface ItemInterface {
 export interface SalesRecapReportInterface {
   _id: string | ObjectId;
   invoiceNumber?: string;
-  date?: Date;
+  date?: string;
   customer?: {
     name?: string;
   };
