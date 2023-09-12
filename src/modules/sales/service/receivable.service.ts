@@ -102,7 +102,10 @@ export class ReceivableReportService {
                   paid: 1,
                 },
                 remaining: {
-                  $subtract: [{ $subtract: ["$conTotal", "$memoJournal.debit"] }, "$payment.paid"],
+                  $subtract: [
+                    { $subtract: [{ $ifNull: ["$conTotal", 0] }, { $ifNull: ["$memoJournal.debit", 0] }] },
+                    { $ifNull: ["$payment.paid", 0] }
+                  ]
                 },
               },
             },
