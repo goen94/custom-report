@@ -15,7 +15,10 @@ export class PurchaseReportService {
         },
       },
       {
-        $unwind: "$items",
+        $unwind: {
+          path: "$items",
+          preserveNullAndEmptyArrays: true, // Preserve documents with empty 'items' array
+        },
       },
       ...(match.length > 0
         ? [
@@ -33,22 +36,40 @@ export class PurchaseReportService {
           invoiceNumber: "$purchaseInvoiceNumber",
           date: 1,
           warehouse: {
-            name: "$warehouse.name",
-            code: "$warehouse.code",
+            name: {
+              $ifNull: ["$warehouse.name", "-"] // Set quantity to 0 if it's null
+            },
+            code: {
+              $ifNull: ["$warehouse.code", "-"] // Set quantity to 0 if it's null
+            },
           },
           supplier: {
             name: "$supplier.name",
             code: "$supplier.code",
           },
           item: {
-            name: "$items.name",
-            code: "$items.code",
+            name: {
+              $ifNull: ["$items.name", "-"] // Set quantity to 0 if it's null
+            },
+            code: {
+              $ifNull: ["$items.code", "-"] // Set quantity to 0 if it's null
+            },
           },
-          notes: 1,
-          quantity: "$items.quantity",
-          unit: "$items.unit",
-          price: "$items.price",
-          discount: "$items.discount",
+          notes: {
+            $ifNull: ["$note", "-"] // Set quantity to 0 if it's null
+          },
+          quantity: {
+            $ifNull: ["$items.quantity", 0] // Set quantity to 0 if it's null
+          },
+          unit: {
+            $ifNull: ["$items.unit", "-"] // Set quantity to 0 if it's null
+          },
+          price: {
+            $ifNull: ["$items.price", 0] // Set quantity to 0 if it's null
+          },
+          discount: {
+            $ifNull: ["$items.discount", 0] // Set quantity to 0 if it's null
+          },
           tax: {
             $multiply: [{ $divide: ["$conTax", "$conTaxBase"] }, "$items.subtotal"],
           },
