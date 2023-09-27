@@ -24,7 +24,8 @@ export class SalesFactory extends Factory<SalesInterface> {
     const fakeQty = faker.datatype.number({ min: 5, max: 10 });
     const fakeDisc = faker.datatype.number({ min: 0, max: 30000, precision: 1000 });
     const fakeSubTotal = fakePrice * fakeQty - fakeDisc;
-    const fakeTax = fakeSubTotal * (11 / 100);
+    const fakeDiscount = faker.datatype.number({ min: 0, max: 30000, precision: 1000 });
+    const fakeTax = (fakeSubTotal - fakeDiscount) * (11 / 100);
     const fakeTotal = fakeSubTotal + fakeTax;
 
     return {
@@ -38,6 +39,8 @@ export class SalesFactory extends Factory<SalesInterface> {
         _id: faker.database.mongodbObjectId(),
         number: faker.finance.account(),
       },
+      subTotal: fakeSubTotal.toString(),
+      fakeDisc: fakeDiscount.toString(),
       taxBase: fakeSubTotal.toString(),
       tax: fakeTax.toString(),
       total: fakeTotal.toString(),

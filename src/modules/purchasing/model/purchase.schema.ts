@@ -57,6 +57,27 @@ export async function createCollection(db: IDatabaseAdapter) {
             },
           },
         },
+        fakturPajak: {
+          bsonType: "object",
+          properties: {
+            _id: {
+              bsonType: "objectId",
+              description: "The _id for the faktur pajak",
+            },
+            number: {
+              bsonType: "string",
+              description: "The number for the faktur pajak",
+            },
+          },
+        },
+        subTotal: {
+          bsonType: "string",
+          description: "The subtotal of invoice",
+        },
+        discount: {
+          bsonType: "string",
+          description: "The discount of invoice",
+        },
         taxBase: {
           bsonType: "string",
           description: "Base value for added tax",
@@ -124,6 +145,10 @@ export async function createCollection(db: IDatabaseAdapter) {
               bsonType: "objectId",
               description: "The user_id for the users",
             },
+            username: {
+              bsonType: "string",
+              description: "The username for the user",
+            },
             name: {
               bsonType: "string",
               description: "The name for the user",
@@ -138,6 +163,10 @@ export async function createCollection(db: IDatabaseAdapter) {
               _id: {
                 bsonType: "objectId",
                 description: "The _id for the item",
+              },
+              group: {
+                bsonType: "string",
+                description: "The group for the item",
               },
               code: {
                 bsonType: "string",

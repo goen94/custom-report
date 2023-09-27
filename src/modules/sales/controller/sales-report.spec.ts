@@ -42,6 +42,9 @@ describe("retrieve sales report", () => {
     expect(response.body.data[0].discount).toStrictEqual(data[0].discount);
     expect(response.body.data[0].tax).toStrictEqual(data[0].tax);
     expect(response.body.data[0].total).toStrictEqual(data[0].total);
+    expect(response.body.data[0].createdBy.username).toStrictEqual(data[0].createdBy.username);
+    expect(response.body.data[0].createdBy.name).toStrictEqual(data[0].createdBy.name);
+    expect(response.body.data[0].deliveryNote.number).toStrictEqual(data[0].deliveryNote.number);
 
     expect(response.body.pagination.page).toStrictEqual(1);
     expect(response.body.pagination.pageSize).toStrictEqual(10);

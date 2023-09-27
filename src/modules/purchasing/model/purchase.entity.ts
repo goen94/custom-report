@@ -56,6 +56,9 @@ export interface PurchaseRecapReportInterface {
   purchaseReceive?: {
     number?: string;
   };
+  fakturPajak?: {
+    number?: string;
+  };
   notes?: string;
   taxBase?: string;
   tax?: string;

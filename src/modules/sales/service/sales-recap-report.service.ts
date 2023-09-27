@@ -26,6 +26,8 @@ export class SalesRecapReportService {
           "customer.name": 1,
           "warehouse.name": 1,
           notes: 1,
+          subTotal: 1,
+          discount: 1,
           taxBase: 1,
           tax: 1,
           total: 1,

@@ -43,6 +43,19 @@ export class SalesReportService {
               $ifNull: ["$warehouse.code", "-"] // Set quantity to 0 if it's null
             },
           },
+          createdBy: {
+            username: {
+              $ifNull: ["$createdBy.username", "-"] // Set quantity to 0 if it's null
+            },
+            name: {
+              $ifNull: ["$createdBy.name", "-"] // Set quantity to 0 if it's null
+            },
+          },
+          deliveryNote: {
+            number: {
+              $ifNull: ["$deliveryNote.number", "-"] // Set quantity to 0 if it's null
+            },
+          },
           customer: 1,
           item: {
             name: {

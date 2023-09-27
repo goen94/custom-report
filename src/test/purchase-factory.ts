@@ -37,6 +37,10 @@ export class PurchaseFactory extends Factory<PurchaseInterface> {
         _id: faker.database.mongodbObjectId(),
         number: faker.finance.account(),
       },
+      fakturPajak: {
+        _id: faker.database.mongodbObjectId(),
+        number: faker.finance.account(),
+      },
       purchaseOrder: {
         _id: faker.database.mongodbObjectId(),
         number: faker.finance.account(),
