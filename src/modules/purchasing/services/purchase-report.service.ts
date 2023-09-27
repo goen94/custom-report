@@ -56,7 +56,7 @@ export class PurchaseReportService {
             },
           },
           notes: {
-            $ifNull: ["$note", "-"] // Set quantity to 0 if it's null
+            $ifNull: ["$notes", "-"] // Set quantity to 0 if it's null
           },
           quantity: {
             $ifNull: ["$items.quantity", 0] // Set quantity to 0 if it's null
