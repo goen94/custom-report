@@ -33,7 +33,7 @@ export class SalesReportService {
         $project: {
           _id: 1,
           "salesOrder.number": 1,
-          invoiceNumber: "$purchaseInvoiceNumber",
+          invoiceNumber: "$salesInvoiceNumber",
           date: 1,
           warehouse: {
             name: {
