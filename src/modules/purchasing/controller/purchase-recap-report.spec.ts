@@ -30,7 +30,6 @@ describe("retrieve purchase recap report", () => {
     expect(response.body.data[0].date).toStrictEqual(data[0].date);
     expect(response.body.data[0].supplier.name).toStrictEqual(data[0].supplier?.name);
     expect(response.body.data[0].purchaseReceive.number).toStrictEqual(data[0].purchaseReceive?.number);
-    expect(response.body.data[0].fakturPajak.number).toStrictEqual(data[0].fakturPajak?.number);
     expect(response.body.data[0].notes).toStrictEqual(data[0].notes);
     expect(response.body.data[0].taxBase).toStrictEqual(data[0].taxBase);
     expect(response.body.data[0].tax).toStrictEqual(data[0].tax);

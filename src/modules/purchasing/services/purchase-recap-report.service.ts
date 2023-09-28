@@ -21,7 +21,6 @@ export class PurchaseRecapReportService {
         $project: {
           _id: 1,
           "purchaseReceive.number": 1,
-          "fakturPajak.number": 1,
           invoiceNumber: "$purchaseInvoiceNumber",
           date: 1,
           "supplier.name": 1,

@@ -57,19 +57,6 @@ export async function createCollection(db: IDatabaseAdapter) {
             },
           },
         },
-        fakturPajak: {
-          bsonType: "object",
-          properties: {
-            _id: {
-              bsonType: "objectId",
-              description: "The _id for the faktur pajak",
-            },
-            number: {
-              bsonType: "string",
-              description: "The number for the faktur pajak",
-            },
-          },
-        },
         subTotal: {
           bsonType: "string",
           description: "The subtotal of invoice",
