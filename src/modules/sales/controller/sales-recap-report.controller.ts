@@ -4,6 +4,7 @@ import { SalesRecapReportInterface } from "../model/sales.entity";
 import { SalesRecapReportService } from "../service/sales-recap-report.service.js";
 import { QueryInterface } from "@src/database/connection.js";
 import { db } from "@src/database/database.js";
+import {ObjectId} from "mongodb";
 
 export interface PaginationInterface {
   page: number;
@@ -41,6 +42,10 @@ export const salesRecapReportController = async (req: Request, res: Response, ne
 
     const match = [];
     match.push({ date: { $gte: dateFrom, $lte: dateTo } });
+
+    if (req.query.customer_id) {
+      match.push({ "customer._id": new ObjectId(req.query.customer_id as string) });
+    }
 
     const service = new SalesRecapReportService(db);
     const result = await service.handle(query, match);
