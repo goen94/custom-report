@@ -1,10 +1,10 @@
 import { format } from "date-fns";
 import { NextFunction, Request, Response } from "express";
+import { ObjectId } from "mongodb";
 import { SalesRecapReportInterface } from "../model/sales.entity";
 import { SalesRecapReportService } from "../service/sales-recap-report.service.js";
 import { QueryInterface } from "@src/database/connection.js";
 import { db } from "@src/database/database.js";
-import {ObjectId} from "mongodb";
 
 export interface PaginationInterface {
   page: number;

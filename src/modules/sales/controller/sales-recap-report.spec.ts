@@ -1,7 +1,7 @@
 import request from "supertest";
 import { createApp } from "@src/app.js";
 import { SalesFactory } from "@src/test/sales-factory.js";
-import {resetDatabase, retrieveAll} from "@src/test/utils.js";
+import { resetDatabase, retrieveAll } from "@src/test/utils.js";
 
 describe("retrieve sales recap report", () => {
   beforeEach(async () => {
@@ -63,7 +63,7 @@ describe("retrieve sales recap report", () => {
     expect(response.statusCode).toEqual(200);
 
     // expect response json
-    expect(response.body.data.length).toStrictEqual(3);
+    expect(response.body.data.length).toStrictEqual(1);
     expect(response.body.data[0]._id).toBeDefined();
     expect(response.body.data[0].invoiceNumber).toStrictEqual(data[0].invoiceNumber);
     expect(response.body.data[0].date).toStrictEqual(data[0].date);

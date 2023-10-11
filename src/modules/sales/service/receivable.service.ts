@@ -9,126 +9,46 @@ export class ReceivableReportService {
   public async handle(query: QueryInterface, match: Array<DocumentInterface>) {
     const pipeline = [
       {
-        $facet: {
-          items: [
-            {
-              $addFields: {
-                conTaxBase: { $convert: { input: "$taxBase", to: "double" } },
-                conTax: { $convert: { input: "$tax", to: "double" } },
-              },
-            },
-            {
-              $unwind: "$items",
-            },
-            ...(match.length > 0
-              ? [
-                  {
-                    $match: {
-                      $and: match,
-                    },
-                  },
-                ]
-              : []),
-            {
-              $project: {
-                _id: 1,
-                "salesOrder.number": 1,
-                invoiceNumber: "$salesInvoiceNumber",
-                date: 1,
-                warehouse: 1,
-                customer: 1,
-                item: {
-                  name: "$items.name",
-                  code: "$items.code",
-                },
-                notes: 1,
-                quantity: "$items.quantity",
-                unit: "$items.unit",
-                price: "$items.price",
-                discount: "$items.discount",
-                tax: {
-                  $multiply: [{ $divide: ["$conTax", "$conTaxBase"] }, "$items.subtotal"],
-                },
-                total: {
-                  $add: [
-                    { $multiply: [{ $divide: ["$conTax", "$conTaxBase"] }, "$items.subtotal"] },
-                    "$items.subtotal",
-                  ],
-                },
-                "memoJournal.debit": "0",
-                "payment.paid": "0",
-                remaining: "0",
-              },
-            },
-          ],
-          emptyItems: [
-            {
-              $addFields: {
-                conTotal: { $convert: { input: "$total", to: "double" } },
-              },
-            },
-            ...(match.length > 0
-              ? [
-                  {
-                    $match: {
-                      $and: match,
-                    },
-                  },
-                ]
-              : []),
-            {
-              $project: {
-                _id: 1,
-                "salesOrder.number": 1,
-                invoiceNumber: "$salesInvoiceNumber",
-                date: 1,
-                warehouse: 1,
-                customer: 1,
-                item: {
-                  name: "",
-                  code: "",
-                },
-                notes: 1,
-                quantity: "0",
-                unit: "-",
-                price: "0",
-                discount: "0",
-                tax: 1,
-                total: 1,
-                memoJournal: {
-                  debit: 1,
-                },
-                payment: {
-                  paid: 1,
-                },
-                remaining: {
-                  $subtract: [
-                    { $subtract: [{ $ifNull: ["$conTotal", 0] }, { $ifNull: ["$memoJournal.debit", 0] }] },
-                    { $ifNull: ["$payment.paid", 0] }
-                  ]
-                },
-              },
-            },
-          ],
+        $addFields: {
+          conTotal: { $convert: { input: "$total", to: "double" } },
         },
       },
+      ...(match.length > 0
+        ? [
+            {
+              $match: {
+                $and: match,
+              },
+            },
+          ]
+        : []),
       {
         $project: {
-          rows: { $concatArrays: ["$items", "$emptyItems"] },
-        },
-      },
-      {
-        $unwind: "$rows",
-      },
-      {
-        $replaceRoot: {
-          newRoot: "$rows",
-        },
-      },
-      {
-        $sort: {
+          _id: 1,
+          "salesOrder.number": 1,
+          invoiceNumber: "$salesInvoiceNumber",
           date: 1,
-          invoiceNumber: 1,
+          warehouse: 1,
+          customer: 1,
+          subTotal: 1,
+          discount: 1,
+          taxBase: 1,
+          tax: 1,
+          total: 1,
+          items: 1,
+          notes: 1,
+          memoJournal: {
+            debit: 1,
+          },
+          payment: {
+            paid: 1,
+          },
+          remaining: {
+            $subtract: [
+              { $subtract: [{ $ifNull: ["$conTotal", 0] }, { $ifNull: ["$memoJournal.debit", 0] }] },
+              { $ifNull: ["$payment.paid", 0] },
+            ],
+          },
         },
       },
     ];

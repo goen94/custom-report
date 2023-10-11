@@ -33,18 +33,24 @@ describe("retrieve sales report", () => {
     expect(response.body.data[0].warehouse.code).toStrictEqual(data[0].warehouse.code);
     expect(response.body.data[0].customer.code).toStrictEqual(data[0].customer.code);
     expect(response.body.data[0].customer.name).toStrictEqual(data[0].customer.name);
-    expect(response.body.data[0].item.code).toStrictEqual(data[0].item.code);
-    expect(response.body.data[0].item.name).toStrictEqual(data[0].item.name);
     expect(response.body.data[0].notes).toStrictEqual(data[0].notes);
-    expect(response.body.data[0].quantity).toStrictEqual(data[0].quantity);
-    expect(response.body.data[0].unit).toStrictEqual(data[0].unit);
-    expect(response.body.data[0].price).toStrictEqual(data[0].price);
-    expect(response.body.data[0].discount).toStrictEqual(data[0].discount);
-    expect(response.body.data[0].tax).toStrictEqual(data[0].tax);
-    expect(response.body.data[0].total).toStrictEqual(data[0].total);
+    expect(response.body.data[0].items[0].code).toStrictEqual(data[0].items[0].code);
+    expect(response.body.data[0].items[0].name).toStrictEqual(data[0].items[0].name);
+    expect(response.body.data[0].items[0].quantity).toStrictEqual(data[0].items[0].quantity);
+    expect(response.body.data[0].items[0].unit).toStrictEqual(data[0].items[0].unit);
+    expect(response.body.data[0].items[0].price).toStrictEqual(data[0].items[0].price);
+    expect(response.body.data[0].items[0].discount).toStrictEqual(data[0].items[0].discount);
+    expect(response.body.data[0].items[0].tax).toStrictEqual(data[0].items[0].tax);
+    expect(response.body.data[0].items[0].total).toStrictEqual(data[0].items[0].total);
     expect(response.body.data[0].createdBy.username).toStrictEqual(data[0].createdBy.username);
     expect(response.body.data[0].createdBy.name).toStrictEqual(data[0].createdBy.name);
     expect(response.body.data[0].deliveryNote.number).toStrictEqual(data[0].deliveryNote.number);
+
+    expect(response.body.data[0].subTotal).toStrictEqual(data[0].subTotal);
+    expect(response.body.data[0].discount).toStrictEqual(data[0].discount);
+    expect(response.body.data[0].taxBase).toStrictEqual(data[0].taxBase);
+    expect(response.body.data[0].tax).toStrictEqual(data[0].tax);
+    expect(response.body.data[0].total).toStrictEqual(data[0].total);
 
     expect(response.body.pagination.page).toStrictEqual(1);
     expect(response.body.pagination.pageSize).toStrictEqual(10);
@@ -79,13 +85,21 @@ describe("retrieve sales report", () => {
     expect(response.body.data[0].warehouse.code).toStrictEqual(data[0].warehouse.code);
     expect(response.body.data[0].customer.code).toStrictEqual(data[0].customer.code);
     expect(response.body.data[0].customer.name).toStrictEqual(data[0].customer.name);
-    expect(response.body.data[0].item.code).toStrictEqual(data[0].item.code);
-    expect(response.body.data[0].item.name).toStrictEqual(data[0].item.name);
-    expect(response.body.data[0].notes).toStrictEqual(data[0].notes);
-    expect(response.body.data[0].quantity).toStrictEqual(data[0].quantity);
-    expect(response.body.data[0].unit).toStrictEqual(data[0].unit);
-    expect(response.body.data[0].price).toStrictEqual(data[0].price);
+    expect(response.body.data[0].items[0].code).toStrictEqual(data[0].items[0].code);
+    expect(response.body.data[0].items[0].name).toStrictEqual(data[0].items[0].name);
+    expect(response.body.data[0].items[0].quantity).toStrictEqual(data[0].items[0].quantity);
+    expect(response.body.data[0].items[0].unit).toStrictEqual(data[0].items[0].unit);
+    expect(response.body.data[0].items[0].price).toStrictEqual(data[0].items[0].price);
+    expect(response.body.data[0].items[0].discount).toStrictEqual(data[0].items[0].discount);
+    expect(response.body.data[0].items[0].tax).toStrictEqual(data[0].items[0].tax);
+    expect(response.body.data[0].items[0].total).toStrictEqual(data[0].items[0].total);
+    expect(response.body.data[0].createdBy.username).toStrictEqual(data[0].createdBy.username);
+    expect(response.body.data[0].createdBy.name).toStrictEqual(data[0].createdBy.name);
+    expect(response.body.data[0].deliveryNote.number).toStrictEqual(data[0].deliveryNote.number);
+
+    expect(response.body.data[0].subTotal).toStrictEqual(data[0].subTotal);
     expect(response.body.data[0].discount).toStrictEqual(data[0].discount);
+    expect(response.body.data[0].taxBase).toStrictEqual(data[0].taxBase);
     expect(response.body.data[0].tax).toStrictEqual(data[0].tax);
     expect(response.body.data[0].total).toStrictEqual(data[0].total);
 
