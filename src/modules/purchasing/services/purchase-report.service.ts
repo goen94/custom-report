@@ -37,10 +37,10 @@ export class PurchaseReportService {
           date: 1,
           warehouse: {
             name: {
-              $ifNull: ["$warehouse.name", "-"] // Set quantity to 0 if it's null
+              $ifNull: ["$warehouse.name", "-"], // Set quantity to 0 if it's null
             },
             code: {
-              $ifNull: ["$warehouse.code", "-"] // Set quantity to 0 if it's null
+              $ifNull: ["$warehouse.code", "-"], // Set quantity to 0 if it's null
             },
           },
           supplier: {
@@ -49,26 +49,26 @@ export class PurchaseReportService {
           },
           item: {
             name: {
-              $ifNull: ["$items.name", "-"] // Set quantity to 0 if it's null
+              $ifNull: ["$items.name", "-"], // Set quantity to 0 if it's null
             },
             code: {
-              $ifNull: ["$items.code", "-"] // Set quantity to 0 if it's null
+              $ifNull: ["$items.code", "-"], // Set quantity to 0 if it's null
             },
           },
           notes: {
-            $ifNull: ["$notes", "-"] // Set quantity to 0 if it's null
+            $ifNull: ["$notes", "-"], // Set quantity to 0 if it's null
           },
           quantity: {
-            $ifNull: ["$items.quantity", 0] // Set quantity to 0 if it's null
+            $ifNull: ["$items.quantity", 0], // Set quantity to 0 if it's null
           },
           unit: {
-            $ifNull: ["$items.unit", "-"] // Set quantity to 0 if it's null
+            $ifNull: ["$items.unit", "-"], // Set quantity to 0 if it's null
           },
           price: {
-            $ifNull: ["$items.price", 0] // Set quantity to 0 if it's null
+            $ifNull: ["$items.price", 0], // Set quantity to 0 if it's null
           },
           discount: {
-            $ifNull: ["$items.discount", 0] // Set quantity to 0 if it's null
+            $ifNull: ["$items.discount", 0], // Set quantity to 0 if it's null
           },
           tax: {
             $multiply: [{ $divide: ["$conTax", "$conTaxBase"] }, "$items.subtotal"],

@@ -5,5 +5,6 @@ const router = Router();
 
 router.get("/purchase-recap-report", controller.purchaseRecapReportController);
 router.get("/purchase-report", controller.purchaseReportController);
+router.get("/supplier", controller.supplierController);
 
 export default router;

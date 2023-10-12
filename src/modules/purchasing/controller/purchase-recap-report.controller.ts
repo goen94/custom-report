@@ -46,6 +46,10 @@ export const purchaseRecapReportController = async (req: Request, res: Response,
       match.push({ "supplier._id": new ObjectId(req.query.supplier_id as string) });
     }
 
+    if (req.query.supplier) {
+      match.push({ "supplier.name": new RegExp(".*" + req.query.supplier + ".*", "i") });
+    }
+
     const service = new PurchaseRecapReportService(db);
     const result = await service.handle(query, match);
     const pagination: PaginationInterface = {
