@@ -52,6 +52,9 @@ export const purchaseReportController = async (req: Request, res: Response, next
     if (req.query.item_id) {
       match.push({ "items._id": new ObjectId(req.query.item_id as string) });
     }
+    if (req.query.supplier) {
+      match.push({ "supplier.name": new RegExp(".*" + req.query.supplier + ".*", "i") });
+    }
 
     const service = new PurchaseReportService(db);
     const result = await service.handle(query, match);

@@ -8,11 +8,6 @@ export class ReceivableReportService {
   }
   public async handle(query: QueryInterface, match: Array<DocumentInterface>) {
     const pipeline = [
-      {
-        $addFields: {
-          conTotal: { $convert: { input: "$total", to: "double" } },
-        },
-      },
       ...(match.length > 0
         ? [
             {
@@ -23,30 +18,54 @@ export class ReceivableReportService {
           ]
         : []),
       {
+        $group: {
+          _id: {
+            group: "$items.group", // Group by the items.group field
+            _id: "$_id",
+            salesOrder: "$salesOrder.number",
+            invoiceNumber: "$salesInvoiceNumber",
+            date: "$date",
+            warehouse: "$warehouse",
+            customer: "$customer",
+            subTotal: "$subTotal",
+            discount: "$discount",
+            taxBase: "$taxBase",
+            tax: "$tax",
+            total: "$total",
+            items: "$items",
+            notes: "$notes",
+            memoJournal: "$memoJournal",
+            payment: "$payment",
+            remaining: "$remaining",
+          },
+        },
+      },
+      {
+        $addFields: {
+          conTotal: { $convert: { input: "$_id.total", to: "double" } },
+        },
+      },
+      {
         $project: {
-          _id: 1,
-          "salesOrder.number": 1,
-          invoiceNumber: "$salesInvoiceNumber",
-          date: 1,
-          warehouse: 1,
-          customer: 1,
-          subTotal: 1,
-          discount: 1,
-          taxBase: 1,
-          tax: 1,
-          total: 1,
-          items: 1,
-          notes: 1,
-          memoJournal: {
-            debit: 1,
-          },
-          payment: {
-            paid: 1,
-          },
+          _id: "$_id._id",
+          "salesOrder.number": "$_id.salesOrder",
+          invoiceNumber: "$_id.invoiceNumber",
+          date: "$_id.date",
+          warehouse: "$_id.warehouse",
+          customer: "$_id.customer",
+          subTotal: "$_id.subTotal",
+          discount: "$_id.discount",
+          taxBase: "$_id.taxBase",
+          tax: "$_id.tax",
+          total: "$_id.total",
+          items: "$_id.items",
+          notes: "$_id.notes",
+          memoJournal: "$_id.memoJournal",
+          payment: "$_id.payment",
           remaining: {
             $subtract: [
-              { $subtract: [{ $ifNull: ["$conTotal", 0] }, { $ifNull: ["$memoJournal.debit", 0] }] },
-              { $ifNull: ["$payment.paid", 0] },
+              { $subtract: [{ $ifNull: ["$conTotal", 0] }, { $ifNull: ["$_id.memoJournal.debit", 0] }] },
+              { $ifNull: ["$_id.payment.paid", 0] },
             ],
           },
         },

@@ -6,5 +6,6 @@ const router = Router();
 router.get("/sales-recap-report", controller.salesRecapReportController);
 router.get("/sales-report", controller.salesReportController);
 router.get("/receivables", controller.receivablesReportController);
+router.get("/customer", controller.customerController);
 
 export default router;
