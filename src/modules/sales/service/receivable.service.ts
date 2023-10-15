@@ -18,6 +18,9 @@ export class ReceivableReportService {
           ]
         : []),
       {
+        $unwind: "$items",
+      },
+      {
         $group: {
           _id: {
             group: "$items.group", // Group by the items.group field
@@ -38,6 +41,7 @@ export class ReceivableReportService {
             payment: "$payment",
             remaining: "$remaining",
           },
+          items: { $push: "$items" },
         },
       },
       {

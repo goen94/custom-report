@@ -36,6 +36,12 @@ export const receivablesReportController = async (req: Request, res: Response, n
     if (req.query.customer) {
       match.push({ "customer.name": new RegExp(".*" + req.query.customer + ".*", "i") });
     }
+    if (req.query.warehouse_id) {
+      match.push({ "warehouse._id": new ObjectId(req.query.warehouse_id as string) });
+    }
+    if (req.query.item_id) {
+      match.push({ "items._id": new ObjectId(req.query.item_id as string) });
+    }
 
     const service = new ReceivableReportService(db);
     const result = await service.handle(query, match);
