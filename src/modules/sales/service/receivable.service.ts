@@ -18,7 +18,9 @@ export class ReceivableReportService {
           ]
         : []),
       {
-        $unwind: "$items",
+        $addFields: {
+          conTotal: { $convert: { input: "$total", to: "double" } },
+        },
       },
       {
         $project: {
