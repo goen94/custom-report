@@ -24,7 +24,7 @@ export class SalesReportService {
           "deliveryNote.number": 1,
           invoiceNumber: "$salesInvoiceNumber",
           date: 1,
-          "customer.name": 1,
+          customer: 1,
           "warehouse.name": 1,
           createdBy: 1,
           notes: 1,

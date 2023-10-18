@@ -46,8 +46,17 @@ export const purchaseRecapReportController = async (req: Request, res: Response,
       match.push({ "supplier._id": new ObjectId(req.query.supplier_id as string) });
     }
 
-    if (req.query.supplier) {
-      match.push({ "supplier.name": new RegExp(".*" + req.query.supplier + ".*", "i") });
+    if (req.query.search) {
+      const search = new RegExp(".*" + req.query.search + ".*", "i");
+      match.push({
+        $or: [
+          { "supplier.name": search },
+          { purchaseInvoiceNumber: search },
+          { date: search },
+          { "purchaseReceive.number": search },
+          { notes: search },
+        ],
+      });
     }
 
     if (req.query.warehouse_id) {

@@ -33,8 +33,20 @@ export const receivablesReportController = async (req: Request, res: Response, n
     if (req.query.customer_id) {
       match.push({ "customer._id": new ObjectId(req.query.customer_id as string) });
     }
-    if (req.query.customer) {
-      match.push({ "customer.name": new RegExp(".*" + req.query.customer + ".*", "i") });
+    if (req.query.search) {
+      const search = new RegExp(".*" + req.query.search + ".*", "i");
+      match.push({
+        $or: [
+          { "customer.name": search },
+          { "customer.code": search },
+          { "items.name": search },
+          { "items.code": search },
+          { "items.group": search },
+          { salesInvoiceNumber: search },
+          { date: search },
+          { notes: search },
+        ],
+      });
     }
     if (req.query.warehouse_id) {
       match.push({ "warehouse._id": new ObjectId(req.query.warehouse_id as string) });

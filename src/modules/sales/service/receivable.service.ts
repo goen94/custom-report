@@ -38,9 +38,11 @@ export class ReceivableReportService {
           items: 1,
           notes: 1,
           memoJournal: {
+            number: 1,
             debit: 1,
           },
           payment: {
+            number: 1,
             paid: 1,
           },
           remaining: {
