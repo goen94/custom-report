@@ -38,12 +38,12 @@ export class ReceivableReportService {
           items: 1,
           notes: 1,
           memoJournal: {
-            number: 1,
-            debit: 1,
+            number: { $ifNull: ["$memoJournal.number", "-"] },
+            debit: { $ifNull: ["$memoJournal.debit", "-"] },
           },
           payment: {
-            number: 1,
-            paid: 1,
+            number: { $ifNull: ["$payment.number", "-"] },
+            paid: { $ifNull: ["$payment.paid", "-"] },
           },
           remaining: {
             $subtract: [
