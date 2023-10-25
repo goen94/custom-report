@@ -1,3 +1,4 @@
+import { format } from "date-fns";
 import { NextFunction, Request, Response } from "express";
 import { ObjectId } from "mongodb";
 import { ReceivableReportService } from "../service/receivable.service.js";
@@ -28,7 +29,18 @@ export const receivablesReportController = async (req: Request, res: Response, n
       sort: (req.query.sort as any) ?? "date",
     };
 
+    let dateFrom = format(new Date(), "yyyy-MM-dd");
+    if (req.query.dateFrom) {
+      dateFrom = req.query.dateFrom as string;
+    }
+
+    let dateTo = format(new Date(), "yyyy-MM-dd");
+    if (req.query.dateTo) {
+      dateTo = req.query.dateTo as string;
+    }
+
     const match = [];
+    match.push({ date: { $gte: dateFrom, $lte: dateTo } });
 
     if (req.query.customer_id) {
       match.push({ "customer._id": new ObjectId(req.query.customer_id as string) });
